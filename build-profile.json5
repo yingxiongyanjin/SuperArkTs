@@ -40,8 +40,8 @@
   },
   "modules": [
     {
-      "name": "entry",
-      "srcPath": "./entry",
+      "name": "worker",
+      "srcPath": "./worker",
       "targets": [
         {
           "name": "default",

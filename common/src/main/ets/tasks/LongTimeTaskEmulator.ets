@@ -1,9 +1,9 @@
-import { LogUtil } from '@hl/common';
+import { LogUtil } from '../utils/LogUtil';
 
 const TAG = 'LongTimeTaskEmulator'
 
 export class LongTimeTaskEmulator {
-  private static stopXMilliseconds(ms: number = 1000) {
+  private static stopXMilliseconds(ms:number) {
     const start = new Date();
     LogUtil.info(TAG, `a long time task start!`);
     while (true) {
@@ -15,19 +15,19 @@ export class LongTimeTaskEmulator {
     }
   }
 
-  public static getARandomNumber(): number {
-    LogUtil.info(TAG, 'get a random number task start!');
+  public static getARandomNumber(ms: number = 1000): number {
+    LogUtil.info(TAG, `get a random number task start! its will cost ${ms} ms.`);
     const num = Math.random();
-    LongTimeTaskEmulator.stopXMilliseconds();
+    LongTimeTaskEmulator.stopXMilliseconds(ms);
     LogUtil.info(TAG, 'get a random number task end!');
     return num;
   }
 
-  public static getARandomNumberPromise(): Promise<number> {
-    return new Promise((resolver, reject) => {
-      LogUtil.info(TAG, 'get a random number task start!');
+  public static getARandomNumberPromise(ms: number = 1000): Promise<number> {
+    return new Promise(async (resolver, reject) => {
+      LogUtil.info(TAG, `get a random number task start! its will cost ${ms} ms.`);
       const num = Math.random();
-      LongTimeTaskEmulator.stopXMilliseconds();
+      LongTimeTaskEmulator.stopXMilliseconds(ms);
       LogUtil.info(TAG, 'get a random number task end!');
       resolver(num);
     })

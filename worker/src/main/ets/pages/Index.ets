@@ -1,4 +1,4 @@
-import { Subscriber, LogUtil } from '@hl/common';
+import { Subscriber, LogUtil, PromiseUtil } from '@hl/common';
 import { EmulatorMainThreadClient } from '../publishers/EmulatorMainThreadClient';
 import { WorkerServer } from '../servers/WorkerServer';
 
@@ -26,11 +26,12 @@ struct Index {
         .width(100)
         .onClick(async () => {
           LogUtil.info(TAG, 'click again!')
-          const number = await this.emulatorSubscriber.res as number;
-          if (number > 0.5) {
-            this.message = 'The Number Greater Than 0.5!';
+          const number =
+            await PromiseUtil.awaitPromiseSafely<number>(this.emulatorSubscriber.res as Promise<number>, 20);
+          if (number === undefined) {
+            this.message = 'time out!'
           } else {
-            this.message = 'The Number Litter Than 0.5!';
+            this.message = number > 0.5 ? 'The Number greater than 0.5!':'The Number litter than 0.5!';
           }
         })
     }
@@ -42,12 +43,12 @@ struct Index {
     LogUtil.info(TAG, 'aboutToAppear');
     WorkerServer.getInstance().subscribe('GET_A_NUMBER', this.emulatorSubscriber);
     EmulatorMainThreadClient.getInstance().startTask();
-    EmulatorMainThreadClient.getInstance().notify<Promise<number>>('GET_A_NUMBER');
     EmulatorMainThreadClient.getInstance().execute();
+    EmulatorMainThreadClient.getInstance().notify<Promise<number>>('GET_A_NUMBER');
   }
 }
 
-  class EmulatorSubscriber implements Subscriber {
+class EmulatorSubscriber implements Subscriber {
   public id = 0;
   public res: number | undefined | Promise<number> = undefined;
 

@@ -8,6 +8,7 @@ const TAG = 'INDEX';
 @Component
 struct Index {
   @State message: string = 'Hello World';
+  @State buttonOpacity: number = 1;
   private emulatorSubscriber = new EmulatorSubscriber();
 
   build() {
@@ -23,6 +24,7 @@ struct Index {
 
       Button('click me')
         .id('Operator')
+        .opacity(this.buttonOpacity)
         .width(100)
         .onClick(async () => {
           LogUtil.info(TAG, 'click again!')
@@ -33,6 +35,7 @@ struct Index {
           } else {
             this.message = number > 0.5 ? 'The Number greater than 0.5!':'The Number litter than 0.5!';
           }
+          this.buttonOpacity = 0.6;
         })
     }
     .height('100%')

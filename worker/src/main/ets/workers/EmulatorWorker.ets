@@ -1,7 +1,6 @@
 // worker.ets
 import { ErrorEvent, MessageEvents, ThreadWorkerGlobalScope, worker } from '@kit.ArkTS';
-import { LogUtil } from '@hl/common';
-import { LongTimeTaskEmulator } from '../tasks/LongTimeTaskEmulator';
+import { LogUtil, LongTimeTaskEmulator } from '@hl/common';
 
 const TAG = 'workerPort';
 const workerPort: ThreadWorkerGlobalScope = worker.workerPort;
@@ -9,7 +8,8 @@ const workerPort: ThreadWorkerGlobalScope = worker.workerPort;
 // 注册onmessage回调，当Worker线程收到来自其宿主线程通过postMessage接口发送的消息时被调用，在Worker线程执行
 workerPort.onmessage = (taskName: MessageEvents) => {
   LogUtil.info(TAG, `start to excute ${taskName.data}`);
-  const number = LongTimeTaskEmulator.getARandomNumber();
+  const ms: number = Math.random() * 1000;
+  const number: number = LongTimeTaskEmulator.getARandomNumber(ms);
   // 向主线程发送消息
   workerPort.postMessage(number);
 }
